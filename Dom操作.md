@@ -1248,6 +1248,232 @@
 </html>
 ```
 
+### 兄弟节点
+
+```js
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <style>
+
+
+    </style>
+</head>
+<body>
+    <ul>
+        
+    </ul>
+    <div>我是div</div>
+    <span>我是span</span>
+    <script>
+        var div = document.querySelector('div');
+        // nextsibling得到的是下一个节点 但是它包含元素节点和文本节点 所以如下得到的是text
+        console.log(div.nextSibling);
+        // 如下也是获取下一个节点 它得到的只包含元素节点
+        console.log(div.nextElementSibling);
+        // 得到上一个节点 包含文本和元素节点
+        console.log(div.previousSibling);
+        // 得到上一个节点 只包含元素节点 如果没有则返回null 
+        console.log(div.previousElementSibling);
+        // 但是如上两种方式都有兼容问题
+    </script>
+
+</body>
+</html>
+```
+
+### 创建节点
+
+```js
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <style>
+
+
+    </style>
+</head>
+<body>
+    <ul>
+        <li>123</li>
+    </ul>
+    <script>
+        var ul =document.querySelector('ul');
+        // 创建节点
+        var li = document.createElement('li');
+        // 添加节点 给谁添加节点就写谁 如果不添加 只是创建了那依然不生效
+        ul.appendChild(li); //appendchild是在ul的后边追加元素节点
+        var lili = document.createElement('li');
+        ul.insertBefore(lili,ul.children[0]); //在前面追加元素节点 但是它需要指定插入在谁的前面
+    </script>
+
+</body>
+</html>
+```
+
+#### 简单的发布案例
+
+```js
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <style>
+        li {
+            background-color: #999999;
+            margin-bottom: 10px;
+        }
+
+    </style>
+</head>
+<body>
+<!--    创建一个文本域-->
+    <textarea name="" id="" cols="30" rows="10"></textarea>
+    <button>发布</button>
+    <ul>
+
+    </ul>
+    <script>
+        var btn = document.querySelector('button');
+        var text = document.querySelector('textarea');
+        var ul = document.querySelector('ul');
+        // 注册事件
+        btn.onclick = function () {
+            // 判断文本域的值是否为空
+            if (text.value == ''){
+                alert('您没有输入内容');
+            } else {
+                // 创建元素
+                var li = document.createElement('li');
+                // 给li赋值 innerhtml是可读写的 既可以获取值 也可以赋值
+                li.innerHTML = text.value;
+                // 添加元素
+                ul.appendChild(li);
+                text.value = '';
+            }
+
+        }
+
+    </script>
+
+</body>
+</html>
+```
+
+### 删除节点
+
+```js
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <style>
+        li {
+            background-color: #999999;
+            margin-bottom: 10px;
+        }
+
+    </style>
+</head>
+<body>
+    <button>删除</button>
+    <ul>
+        <li>熊大</li>
+        <li>熊二</li>
+        <li>雄三</li>
+    </ul>
+    <script>
+        var ul = document.querySelector('ul');
+        // 删除元素
+        // ul.removeChild(ul.children[0]);
+        // 点一下删除按钮就删除一个li
+        var btn = document.querySelector('button');
+        btn.onclick = function () {
+            if (ul.children.length == 0){
+                alert('当前无内容可删除')
+            }else {
+                ul.removeChild(ul.children[0]);
+            };
+        }
+
+
+
+    </script>
+
+</body>
+</html>
+```
+
+#### 删除留言案例
+
+```js
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <style>
+        li {
+            background-color: #999999;
+            margin-bottom: 10px;
+            width: 300px;
+        }
+        li a {
+            text-decoration: none;
+            color: red;
+            float: right;
+        }
+
+    </style>
+</head>
+<body>
+<!--    创建一个文本域-->
+    <textarea name="" id="" cols="30" rows="10"></textarea>
+    <button>发布</button>
+    <ul>
+
+    </ul>
+    <script>
+        var btn = document.querySelector('button');
+        var text = document.querySelector('textarea');
+        var ul = document.querySelector('ul');
+        // 注册事件
+        btn.onclick = function () {
+            // 判断文本域的值是否为空
+            if (text.value == ''){
+                alert('您没有输入内容');
+            } else {
+                // 创建元素
+                var li = document.createElement('li');
+                // 给li赋值 innerhtml是可读写的 既可以获取值 也可以赋值
+                //                             javascript:;阻止连接跳转
+                li.innerHTML = text.value + "<a href='javascript:;'>删除</a>";
+                // 添加元素
+                ul.appendChild(li);
+                text.value = '';
+                var delli = document.querySelectorAll('a');
+                for (i=0;i<delli.length;i++){
+                  delli[i].onclick = function () {
+                        ul.removeChild(this.parentNode);
+                  }
+                }
+            }
+        };
+
+    </script>
+
+</body>
+</html>
+```
+
+
+
 
 
 
