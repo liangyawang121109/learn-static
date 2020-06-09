@@ -1119,69 +1119,130 @@
     <meta charset="UTF-8">
     <title>Document</title>
     <style>
-        ul{
+        * {
+            /*修改真个页面的margin和padding*/
+            margin: 0;
+            padding: 0;
+        }
+        li {
+            /*去掉li的小黑点*/
             list-style: none;
         }
-        .nav>li{
-            float: left;
-        }
-        ul a{
-            display: block;
+        a {
+            /*去掉a的下划线*/
+            /*修改a标签的字体大小*/
             text-decoration: none;
-            width: 100px;
-            height: 50px;
+            font-size: 14px;
+        }
+        .nav {
+
+            margin: 100px;
+        }
+        .nav>li {
+            position: relative;
+            float: left;
+            /*给li设置宽高*/
+            width: 80px;
+            height: 41px;
+            /*border: 1px solid red;*/
             text-align: center;
-            line-height: 50px;
-            color: white;
-            background-color: #2f3e45;
         }
-        .nav>li:first-child a{
-            border-radius: 10px 0 0 10px;
+        .nav li a {
+            /*将a转换成块级元素*/
+            display: block;
+            /*给a的宽高设置成li的大小*/
+            width: 100%;
+            height: 100%;
+            /*垂直居中*/
+            line-height: 41px;
+            color: #333;
         }
-        .nav>li:last-child a{
-            border-radius: 0 10px 10px 0;
+        .nav>li>a:hover{
+            /*导航栏的鼠标变色*/
+            background-color: #eee;
         }
-        .drop-down{
-            /*position: relative;*/
-        }
-        .drop-down-content{
-            padding: 0;
+        .nav ul {
+            /*下拉菜单的 ul和导航栏的li属于是父子关系 它的定位相对于导航栏的li*/
+            position: absolute;
+            /*隐藏下拉菜单*/
+            top: 41px;
+            left: 0;
             display: none;
-            /*position: absolute;*/
+            width: 100%;
+            border-left: 1px solid #FECC5B;
+            border-right: 1px solid #FECC5B;
+        }
+        .nav ul li {
+            border-bottom: 1px solid #FECC5B;
+        }
+        .nav ul li a:hover{
+            background-color: #FFF5DA;
         }
 
-        h3{
-            font-size: 30px;
-            clear: both;
-        }
-        .drop-down-content li:hover a{
-            background-color:red;
-        }
-        .nav .drop-down:hover .drop-down-content{
-            display: block;
-        }
-</style>
+
+    </style>
 </head>
 <body>
     <ul class="nav">
-        <li class="drop-down"><a href="#">下拉菜单</a>
-            <ul class="drop-down-content">
-                <li><a href="#">我是1</a></li>
-                <li><a href="#">我是2</a></li>
-                <li><a href="#">我是3</a></li>
+        <li>
+            <a href="#">微博</a>
+            <ul>
+                <li>
+                    <a href="">私信</a>
+                </li>
+                <li>
+                    <a href="">评论</a>
+                </li>
+                <li>
+                    <a href="">@我</a>
+                </li>
             </ul>
         </li>
-        <li class="drop-down"><a href="#">下拉菜单</a>
-            <ul class="drop-down-content">
-                <li><a href="#">我是1</a></li>
-                <li><a href="#">我是2</a></li>
-                <li><a href="#">我是3</a></li>
+        <li>
+            <a href="#">微博</a>
+            <ul>
+                <li>
+                    <a href="">私信</a>
+                </li>
+                <li>
+                    <a href="">评论</a>
+                </li>
+                <li>
+                    <a href="">@我</a>
+                </li>
             </ul>
-            </li>
-        <li><a href="#">下拉菜单</a></li>
-        <li><a href="#">下拉菜单</a></li>
-        <li><a href="#">下拉菜单</a></li>
+        </li>
+        <li>
+            <a href="#">微博</a>
+            <ul>
+                <li>
+                    <a href="">私信</a>
+                </li>
+                <li>
+                    <a href="">评论</a>
+                </li>
+                <li>
+                    <a href="">@我</a>
+                </li>
+            </ul>
+        </li>
     </ul>
+    <script>
+        // 下拉菜单事件元素获取
+        // 首先 当鼠标经过上边的 微博 导航栏时 而经过这个动作 获取事件源那就是微博
+        var navli = document.querySelector('.nav').children; //通过children获取到它的三个小li
+        // 循环注册事件
+        for (i=0;i<navli.length;i++){
+            // 为每个导航栏的li注册事件
+            navli[i].onmouseover = function () {
+                // 每个导航栏的li元素分别有两个标签 a ul  那么 触发该事件的是li 即this的孩子的1也就是ul
+                this.children[1].style.display = 'block';
+            };
+            navli[i].onmouseout = function () {
+                this.children[1].style.display = 'none';
+            }
+        }
+    </script>
 
 </body>
 </html>
