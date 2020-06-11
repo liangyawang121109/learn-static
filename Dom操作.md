@@ -1472,6 +1472,159 @@
 </html>
 ```
 
+### 复制节点
+
+```js
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <style>
+        li {
+            background-color: #999999;
+            margin-bottom: 10px;
+            width: 300px;
+        }
+        li a {
+            text-decoration: none;
+            color: red;
+            float: right;
+        }
+
+    </style>
+</head>
+<body>
+    <ul>
+        <li>1</li>
+        <li>2</li>
+        <li>3</li>
+    </ul>
+    <script>
+        var ul = document.querySelector('ul');
+        // 如果clonenode的括号为空或者里边是false 是浅拷贝 只会克隆节点本身而不会克隆里边的子节点
+        // 如果是true 那么是深拷贝 既复制节点又复制内容
+        var cloneli = ul.children[0].cloneNode(true);
+        ul.appendChild(cloneli)
+    </script>
+
+</body>
+</html>
+```
+
+#### 动态生成表格
+
+```js
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <style>
+        li {
+            background-color: #999999;
+            margin-bottom: 10px;
+            width: 300px;
+        }
+        li a {
+            text-decoration: none;
+            color: red;
+            float: right;
+        }
+        table {
+            width: 500px;
+            margin: 100px auto;
+            /*合并两个相邻的框*/
+            border-collapse: collapse;
+            text-align: center;
+        }
+        td,
+        th {
+            border: 1px solid #333;
+        }
+        thead tr {
+            height: 40px;
+            background-color: #999999;
+        }
+
+    </style>
+</head>
+<body>
+    <table>
+        <thead>
+            <tr>
+                <th> 年龄</th>
+                <th> 科目</th>
+                <th> 成绩</th>
+                <th> 操作</th>
+            </tr>
+        </thead>
+        <tbody>
+
+        </tbody>
+    </table>
+    <script>
+        // 准备好学生数据
+        var datas = [{
+            name: '梁亚旺',
+            subnect: 'js',
+            score: '100'
+        },
+            {
+            name: '小红',
+            subnect: 'js',
+            score: '80'
+        },
+            {
+            name: '小明',
+            subnect: 'js',
+            score: '90'
+        },
+            {
+            name: '小黑',
+            subnect: 'js',
+            score: '23'
+        }
+        ];
+        // 往tbody里边创建行  有几个人就创建几个行
+        var tbody = document.querySelector('tbody');
+        for (var i=0;i<datas.length;i++){
+            // 创建tr行
+            var tr = document.createElement('tr');
+            tbody.appendChild(tr);
+            // 创建单元格 取决于每个对象里边的属性个数
+            for (var k in datas[i]){
+                // 创建单元格
+                var td = document.createElement('td');
+                // 创建单元格的同时将对象里的值给td
+                td.innerHTML = datas[i][k];
+                tr.appendChild(td);
+            }
+            // 创建含删除两个字的单元格
+            var td = document.createElement('td');
+            td.innerHTML = "<a href='#'>删除</a>";
+            tr.appendChild(td);
+        }
+        // 删除事件绑定
+        var a = document.querySelectorAll('a');
+        for (i=0;i<a.length;i++){
+            a[i].onclick = function () {
+                // a的父亲是td单元格 但是我们需要删除整行 而单元格的父亲是行 所以需要往上找 而行是tbody的孩子
+                tbody.removeChild(this.parentNode.parentNode)
+            }
+        }
+        // 遍历对象 并获取值
+        // for(var k in obj) {
+        //     k 得到的是属性名
+        //     obj[k] 得到是属性值
+        // }
+
+    </script>
+
+</body>
+</html>
+```
+
 
 
 
