@@ -1625,7 +1625,632 @@
 </html>
 ```
 
+## 事件高级
 
+### 注册事件
+
+addEventListener 事件监听方式
+
+- type 事件类型字符串 比如 click mouseover  这里不需要带on
+- listener  事件处理函数 事件发生时 会调用该监听函数
+- useCapture 可选参数 是一个布尔值 默认是false 
+
+```js
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <style>
+
+
+    </style>
+</head>
+<body>
+    <button>传统注册事件</button>
+    <button>监听注册事件</button>
+    <script>
+        // 传统方式注册事件
+        var btn = document.querySelectorAll('button');
+        btn[0].onclick = function () {
+            alert('传统事件1')
+        };
+        // 下边的这个函数会把上边的这个函数覆盖 传统方式是唯一性的
+        btn[0].onclick = function () {
+            alert('传统事件2')
+        };
+        // 事件监听方式注册事件 里边的事件类型是字符串 而且不带on
+        btn[1].addEventListener('click',function () {
+            alert('事件监听方式1')
+        });
+        // 可以添加多个处理程序 事件监听方式
+        btn[1].addEventListener('click',function () {
+            alert('事件监听方式2')
+        })
+    </script>
+
+</body>
+</html>
+```
+
+### 解绑事件
+
+```js
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <style>
+        div{
+            width: 100px;
+            height: 100px;
+            background-color: #999999;
+        }
+
+    </style>
+</head>
+<body>
+    <div>1</div>
+    <div>2</div>
+    <div>3</div>
+    <script>
+        var div = document.querySelectorAll('div');
+        div[0].onclick = function () {
+            alert('div1');
+            // 解绑事件 传统方式注册解绑事件
+            div[0].onclick = null;
+        };
+        // 事件监听方式 的注册解绑事件 里边的函数不需要加小括号
+        div[1].addEventListener('click',func1);
+        function func1() {
+            alert('div2');
+            div[1].removeEventListener('click',func1);
+        }
+
+    </script>
+
+</body>
+</html>
+```
+
+![image-20200611134339108](Dom操作.assets/image-20200611134339108.png)
+
+### 事件冒泡和捕获
+
+```js
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        .father {
+            overflow: hidden;
+            width: 300px;
+            height: 300px;
+            margin: 100px auto;
+            background-color: pink;
+            text-align: center;
+        }
+
+        .son {
+            width: 200px;
+            height: 200px;
+            margin: 50px;
+            background-color: purple;
+            line-height: 200px;
+            color: #fff;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="father">
+        <div class="son">son盒子</div>
+    </div>
+    <script>
+        // dom 事件流 三个阶段
+        // 1. JS 代码中只能执行捕获或者冒泡其中的一个阶段。
+        // 2. onclick 和 attachEvent（ie） 只能得到冒泡阶段。
+        // 3. 捕获阶段 如果addEventListener 第三个参数是 true 那么则处于捕获阶段  document -> html -> body -> father -> son
+        // var son = document.querySelector('.son');
+        // son.addEventListener('click', function() {
+        //     alert('son');
+        // }, true);
+        // var father = document.querySelector('.father');
+        // father.addEventListener('click', function() {
+        //     alert('father');
+        // }, true);
+        // 4. 冒泡阶段 如果addEventListener 第三个参数是 false 或者 省略 那么则处于冒泡阶段  son -> father ->body -> html -> document
+        var son = document.querySelector('.son');
+        son.addEventListener('click', function() {
+            alert('son');
+        }, false);
+        var father = document.querySelector('.father');
+        father.addEventListener('click', function() {
+            alert('father');
+        }, false);
+        document.addEventListener('click', function() {
+            alert('document');
+        })
+    </script>
+</body>
+
+</html>
+```
+
+### 事件对象
+
+```js
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+
+    </style>
+</head>
+
+<body>
+    <div>123</div>
+    <script>
+        var div = document.querySelector('div');
+        div.onclick = function (event) {
+            // event就是事件对象 写到监听函数里 小括号里边
+            // 事件对象 只有有了事件才会存在 它是系统给我们自动创建的不需要我们传参
+            // 事件对象是我们事件的一系列相关数据的集合 跟事件相关的
+            console.log(event)
+        }
+
+
+    </script>
+</body>
+
+</html>
+```
+
+#### 需要掌握的事件对象
+
+![image-20200611135325240](Dom操作.assets/image-20200611135325240.png)
+
+##### target
+
+```js
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+
+    </style>
+</head>
+
+<body>
+    <div>123</div>
+    <ul>
+        <li>abc</li>
+        <li>adb</li>
+        <li>abb</li>
+    </ul>
+    <script>
+        var div = document.querySelector('div');
+        div.addEventListener('click',func1);
+        function func1(e) {
+            // target返回的是触发事件的对象
+            // this返回的是绑定事件的对象
+            console.log(e.target);
+            console.log(this)
+        }
+        // 从ul和li的事件中就可以看出this和target的不同
+        var ul = document.querySelector('ul');
+        ul.addEventListener('click',func2);
+        function func2(e) {
+            // console.log(e.target);
+            console.log(this);
+        }
+    </script>
+</body>
+
+</html>
+```
+
+##### type
+
+```js
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+
+    </style>
+</head>
+
+<body>
+    <div>123</div>
+
+    <script>
+        var div = document.querySelector('div');
+        div.addEventListener('click',func1);
+        div.addEventListener('mouseover',func1);
+        div.addEventListener('mouseout',func1);
+        function func1(e) {
+            // 判断触发事件的类型
+            console.log(e.type);
+        }
+
+    </script>
+</body>
+
+</html>
+```
+
+##### preventDefault
+
+```js
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+
+    </style>
+</head>
+
+<body>
+    <div>123</div>
+    <a href="http:///www.baidu.com">百度</a>
+    <form action="http://www.baidu.com">
+        <input type="submit" value="提交" name="sub">
+    </form>
+
+    <script>
+        // 阻止默认行为 让连接不跳转 或者让提交按钮不提交
+        var a = document.querySelector('a');
+        a.addEventListener('click',func1);
+        function func1(e) {
+            e.preventDefault(); //标准写法
+        }
+    </script>
+</body>
+
+</html>
+```
+
+##### stopPropagation
+
+```js
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        .father{
+            overflow: hidden;
+            width: 100px;
+            height: 100px;
+            margin: 100px auto;
+            background-color: pink;
+            text-align: center;
+        }
+        .son{
+            width: 70%;
+            height: 70%;
+            background-color: purple;
+            margin: 15px;
+            line-height: 70px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="father">
+        <div class="son">son儿子</div>
+    </div>
+
+
+    <script>
+        // 阻止冒泡 dom推荐的标准
+        var son = document.querySelector('.son');
+        son.addEventListener('click',func);
+        function func(e) {
+            alert('son');
+            e.stopPropagation(); //阻止冒泡 
+        }
+        var father = document.querySelector('.father');
+        father.addEventListener('click',func1);
+        function func1() {
+            alert('father');
+        }
+        document.addEventListener('click',func2);
+        function func2() {
+            alert('document');
+
+        }
+
+    </script>
+</body>
+
+</html>
+```
+
+##### 事件委托
+
+```js
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        .father{
+            overflow: hidden;
+            width: 100px;
+            height: 100px;
+            margin: 100px auto;
+            background-color: pink;
+            text-align: center;
+        }
+        .son{
+            width: 70%;
+            height: 70%;
+            background-color: purple;
+            margin: 15px;
+            line-height: 70px;
+        }
+    </style>
+</head>
+
+<body>
+    <ul>
+        <li>1</li>
+        <li>2</li>
+        <li>3</li>
+    </ul>
+
+
+    <script>
+        // 事件委托 给父节点添加事件监听 然后通过冒泡影响子元素
+        var ul = document.querySelector('ul');
+        ul.addEventListener('click',func);
+        function func(e) {
+            alert('test');
+            e.target.style.backgroundColor = 'pink';
+        }
+    </script>
+</body>
+
+</html>
+```
+
+
+
+
+
+
+
+#### 常用的鼠标事件
+
+![image-20200622172841420](Dom操作.assets/image-20200622172841420.png)
+
+##### 鼠标事件对象MouseEvent
+
+![image-20200622173241932](Dom操作.assets/image-20200622173241932.png)
+
+```js
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        body{
+            height: 3000px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <script>
+        document.addEventListener('click',function (e) {
+            console.log(e);
+            //client返回的是鼠标在可视区的x和y坐标
+            console.log(e.clientX);
+            console.log(e.clientY);
+            // page是相对于文档页面的x和y坐标
+            console.log(e.pageX);
+            console.log(e.pageY);
+        })
+    </script>
+</body>
+
+</html>
+```
+
+##### 图片跟着鼠标移动案例
+
+```js
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        img{
+            width: 20px;
+            height: 20px;
+            position: absolute;
+        }
+    </style>
+</head>
+
+<body>
+    <img src="images/qq.png">
+    <script>
+        var img = document.querySelector('img');
+        document.addEventListener('mousemove',func);
+        function func(e) {
+            // 每次移动鼠标都会获得鼠标坐标把这个图片的x和y作为图片的top和left
+            var x = e.pageX;
+            var y = e.pageY;
+            // console.log(x);
+            // console.log(y);
+            // 千万不要忘了加px
+            img.style.left = x + 'px';
+            img.style.top = y + 'px';
+        }
+    </script>
+</body>
+
+</html>
+```
+
+#### 键盘触发事件
+
+![image-20200622204247873](Dom操作.assets/image-20200622204247873.png)
+
+```js
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        img{
+            width: 20px;
+            height: 20px;
+            position: absolute;
+        }
+    </style>
+</head>
+
+<body>
+    <img src="images/qq.png">
+    <script>
+        var img = document.querySelector('img');
+        // keyup 键盘按下弹起的时候触发
+        //document.onkeyup = function () {
+          //  console.log('我弹起来了')
+        //}
+
+        // keydown 按键按下的时候触发
+        document.onkeydown = function () {
+            console.log('按下来了')
+        }
+        // keypress 按键按下的时候触发 不能识别功能键
+
+    </script>
+</body>
+
+</html>
+```
+
+##### 键盘事件对象
+
+```js
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        img{
+            width: 20px;
+            height: 20px;
+            position: absolute;
+        }
+    </style>
+</head>
+
+<body>
+    <img src="images/qq.png">
+    <script>
+        document.addEventListener('keyup',func);
+        function func(e) {
+            console.log(e.keyCode);
+            // keyup和keydown不区分大小写 所以大a小a都是ascll码65
+            // keypress是区分大小写的
+        }
+
+    </script>
+</body>
+
+</html>
+```
+
+##### 按s光标定到input框
+
+```js
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+
+    </style>
+</head>
+
+<body>
+    <input type="text">
+    <script>
+        var search = document.querySelector('input');
+        document.addEventListener('keyup',func);
+        function func(e) {
+            if (e.keyCode === 83){
+                search.focus();
+
+            }
+        }
+
+    </script>
+</body>
+
+</html>
+```
 
 
 
